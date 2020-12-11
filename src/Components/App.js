@@ -11,6 +11,14 @@ import {quatreAya, shuffle} from '../Functions/myFunction'
 import Signup from './Signup'
 import {Container} from 'react-bootstrap'
 import {AuthProvider} from "../contexts/AuthContext"
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import Dashboard from './Dashboard'
+import Login from './Login'
+import PrivateRoute from './PrivateRoute'
+import ForgotPassword from './ForgotPassword'
+import UpdateProfile from './UpdateProfile'
+import Game from './Game'
+//import {useAuth} from '../contexts/AuthContext'
 
 
 
@@ -24,6 +32,7 @@ const [counter, setCounter] =useState(0)
 const [propal, setPropal] =useState([])
 const [score, setScore] =useState(0)
 const [showScore, setShowScore] = useState(false)
+//const {currentUser} = useAuth()
 
 const handleChange = (event) => {
   setSourateName(event.target.value);
@@ -121,7 +130,7 @@ return container
 )
 
 
-console.log(propal)
+//console.log(propal)
 //console.log(propal.filter(item => item.status == 'question')[0].initial)
 
 
@@ -136,10 +145,26 @@ className="d-flex align-items-center justify-content-center"
 style={{minHeight: "100vh"}}
 >
 <div className="w-100" style={{maxWidth: '400px'}}>
-<Signup/>
+<Router>
+  <AuthProvider>
+      <Switch>
+            <PrivateRoute exact path="/" component={Dashboard}/>
+            <PrivateRoute path="/update-profile" component={UpdateProfile}/>
+            <PrivateRoute path="/game" component={Game}/>
+            <Route path="/signup" component={Signup}/>
+            <Route path="/login" component={Login}/>
+            <Route path="/forgot-password" component={ForgotPassword}/>
+
+
+      </Switch>
+  </AuthProvider>
+</Router>
+
 </div>
 </Container>
 
+
+{true &&
 
 <div style={{display: 'flex', justifyContent: 'center', padding: 20 }}>
 
@@ -218,7 +243,7 @@ style={{minHeight: "100vh"}}
 
 </div>
 
-
+}
 </AuthProvider>
 </>
 
