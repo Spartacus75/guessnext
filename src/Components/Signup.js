@@ -3,13 +3,14 @@ import {Card, Form, Button, Alert} from 'react-bootstrap'
 import "bootstrap/dist/css/bootstrap.min.css"
 import {useAuth} from '../contexts/AuthContext'
 import {Link, useHistory} from 'react-router-dom'
+import firebase from 'firebase'
 
 export default function Signup(){
 
 const emailRef = useRef()
 const passwordRef = useRef()
 const passwordConfirmRef = useRef()
-const {signup} = useAuth()
+const {signup, currentUser} = useAuth()
 const [error, setError] =useState('')
 const [loading, setLoading] = useState (false)
 const history = useHistory()
@@ -24,7 +25,25 @@ async function handleSubmit(e){
           setError('')
           setLoading(true)
           await signup(emailRef.current.value, passwordRef.current.value)
-          history.push("/")
+          //au SignUp on crée l'utilisateur dans la base de donnéelse
+          await firebase.firestore().collection('Users').doc(emailRef.current.value).set(
+             
+             {
+                      //userID: currentUser.uid,
+                      email: emailRef.current.value,
+                      gameData: {
+                                  numberTrial: 0,
+                                  numberFail: 0,
+                                  numberRightAnswer:0,
+                                  triedSourate:[]
+                                }
+                    }
+
+          , {merge: true})
+          //fin écriture da
+          console.log('coucou')
+          console.log('UID: ', currentUser.uid)
+          history.push('/game')
         } catch {
           setError('Failed to create an account')
                 }

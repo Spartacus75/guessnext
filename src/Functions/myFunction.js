@@ -51,6 +51,8 @@ export function quatreAya (alqoran, sourateName, counter) {
                     {'rep':four_Aya_text, 'number':four_Aya_number, 'status': 'answer'}
                   ]
 
+console.log(alqoran.surahs.filter(item=>item.name==sourateName)[0])
+
                   return container
 
 }

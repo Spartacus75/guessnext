@@ -23,9 +23,15 @@ history.push('/login')
 
 }
 
+function handleBack(){
+  history.goBack()
+}
+
+
 
   return (
 <>
+
 
     <Card>
         <Card.Body>
@@ -38,6 +44,7 @@ history.push('/login')
 
     <div className="w-100 text-center mt-2">
     <Button variant="link" onClick={handleLogout}>Log Out</Button>
+    <Button variant="link" onClick={handleBack}>Back</Button>
     </div>
 
 </>

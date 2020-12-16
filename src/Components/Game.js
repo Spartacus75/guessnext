@@ -6,6 +6,13 @@ import Alert from '../Assets/PopUp'
 import Card from '../Assets/AnswerCard'
 import Divider from '@material-ui/core/Divider';
 import {quatreAya, shuffle} from '../Functions/myFunction'
+import {useAuth} from '../contexts/AuthContext'
+import Bar from './Bar'
+import firebase from 'firebase'
+
+
+
+
 
 export default function Game(){
 
@@ -16,6 +23,10 @@ export default function Game(){
   const [propal, setPropal] =useState([])
   const [score, setScore] =useState(0)
   const [showScore, setShowScore] = useState(false)
+  const [showMistake, setShowMistake] = useState(false)
+  const [color, setColor]= useState('pink')
+  const [mistake, setMistake] = useState(0)
+  const {currentUser} = useAuth()
 
 
   //const {currentUser} = useAuth()
@@ -33,13 +44,52 @@ export default function Game(){
 
   const onClick3 = () => {
 
+    var percentSuccess = score/counter
+
+    var docRefUp = firebase.firestore().collection("Users").doc(currentUser.email)
+
+    docRefUp
+    .update({
+      "sourates": firebase.firestore.FieldValue.arrayUnion(
+        {
+          timeStamp: Date.now(),
+          name: sourateName,
+          isCompleted: mistake<3 ? true : false,
+          lastScore: score,
+          erreur: mistake,
+          percentageSuccess: 100*percentSuccess.toFixed(2)
+        }
+      )
+    })
+
+
+    /*FIN - si la sourate n'a jamais été faite il faut la créer*/
+    if (mistake ==3) {var isFailed = 1} else {var isFailed = 0}
+    //console.log('mistake value = ', mistake)
+    //console.log('isFailed value', isFailed)
+    var docRefUp = firebase.firestore().collection("Users").doc(currentUser.email)
+
+    docRefUp
+    .update({
+
+        "gameData.numberFail":  firebase.firestore.FieldValue.increment(isFailed),
+        "gameData.numberTrial":  firebase.firestore.FieldValue.increment(1),
+        //"forTestTable": {name: sourateName, isComp: true, isWrong:45}
+    })
+    .then(function() {
+        console.log("Document successfully updated!");
+    });
+
     setCounter(0)
     setScore(0)
+    setMistake(0)
     //il faut aussi initialiser les choix pour les remettre à l'état initial
     setPropal(shuffle(quatreAya(alqoran, sourateName, 0)))
 
-
     setShowScore(false)
+    setShowMistake(false)
+
+
   }
 
   const onClose = () => {
@@ -56,12 +106,16 @@ export default function Game(){
       setScore(0)
       setPropal(shuffle(quatreAya(alqoran, sourateName, 0)))
 
+
     }
 
 
   }
 
   const checkAnswer = (a, b) => {
+
+
+
 
                       //console.log(a)
                       //console.log(b)
@@ -77,8 +131,10 @@ export default function Game(){
                         else {
                           console.log('mauvaise réponse')
                           setCounter(counter+1)
+                          setMistake(mistake+1)
                           //setPropal(shuffle(quatreAya(alqoran, sourateName, counter)))
                         }
+
 
                         //SI LE JEU EST A LA FIN, ON L ARRETE OU SINON ON CONTINUE
                         var tailleSourate = alqoran.surahs.filter(item=>item.name==sourateName)[0].ayahs.length
@@ -94,6 +150,9 @@ export default function Game(){
 
                         }
 
+                        if (mistake ==2){
+                          setShowMistake(true)
+                        }
 
 
 
@@ -106,6 +165,8 @@ export default function Game(){
   container['number']=item.number
   container.name = item.name
 
+
+
   return container
 
   }
@@ -115,9 +176,44 @@ export default function Game(){
 
   )
 
+console.log(currentUser.email)
 
+{/*
+  //test lecture data [DEBUT]
+var docRefReq = firebase.firestore().collection("Users").where('email', "==", currentUser.email)
+
+docRefReq
+.get()
+.then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+    });
+})
+.catch(function(error) {
+    console.log("Error getting documents: ", error);
+});
+//test lecture data [FIN]
+//update value dans tableau [DEBUT]
+var docRefReqII = firebase.firestore().collection("Users").doc(currentUser.email)
+
+docRefReqII
+.update({
+
+    "gameData.numberFail": 78
+})
+.then(function() {
+    console.log("Document successfully updated!");
+});
+//update value dans tableau [FIN]
+*/}
 
         return (
+<>
+
+
+          <Bar/>
+
 
           <div style={{display: 'flex', justifyContent: 'center', padding: 20 }}>
 
@@ -136,7 +232,7 @@ export default function Game(){
 
 
 
-                          <Button text="Commencer" onClick={()=>onClick()}/>
+                          <Button color="secondary" text="Commencer" onClick={()=>onClick()}/>
 
                           <Alert
                                 texte='Fermer'
@@ -155,24 +251,30 @@ export default function Game(){
 
           <h2>Quelle est la suite de ce verset?</h2>
 
-          <p style={{borderWidth:5, border: 'solid', padding: 10, borderRadius:15, display: 'flex', justifyContent: 'center', fontSize: 25}}>
+          <p style={{borderWidth:5, border: 'solid', padding: 10, borderRadius:15, display: 'flex', justifyContent: 'center', fontSize: 25, backgroundColor: '#c8e0ba'}}>
           {propal.filter(item => item.status == 'question')[0].initial}
           </p>
 
+          <Divider light/>Choix #1
           <Card
+                color={color}
                 reponse={propal.filter(item => item.status=='answer')[0].rep}
                 onClick={()=>checkAnswer(propal.filter(item => item.status=='answer')[0].number,propal.filter(item => item.status == 'question')[0].number)
+
                 }/>
-          <Divider light/>
+          <Divider light/>Choix #2
           <Card
+                color={color}
                 reponse={propal.filter(item => item.status=='answer')[1].rep}
                 onClick={()=>checkAnswer(propal.filter(item => item.status=='answer')[1].number,propal.filter(item => item.status == 'question')[0].number)}/>
-          <Divider light/>
+          <Divider light/>Choix #3
           <Card
+                color={color}
                 reponse={propal.filter(item => item.status=='answer')[2].rep}
                 onClick={()=>checkAnswer(propal.filter(item => item.status=='answer')[2].number,propal.filter(item => item.status == 'question')[0].number)}/>
-          <Divider light/>
+          <Divider light/>Choix #4
           <Card
+                color={color}
                 reponse={propal.filter(item => item.status=='answer')[3].rep}
                 onClick={()=>checkAnswer(propal.filter(item => item.status=='answer')[3].number,propal.filter(item => item.status == 'question')[0].number)}/>
           <Divider light/>
@@ -187,6 +289,12 @@ export default function Game(){
                 open={showScore}
                 blabla={'Votre taux de réussite est de ' + 100*(score/counter).toFixed(2) + ' %'}
           />
+          <Alert
+                texte='Fermer'
+                onClick={()=>onClick3()}
+                open={showMistake}
+                blabla={'Vous avez déjà fait 3 erreurs... On recommence'}
+          />
 
 
 
@@ -195,7 +303,7 @@ export default function Game(){
           </div>
 
           </div>
-
+</>
                 )
 
 }

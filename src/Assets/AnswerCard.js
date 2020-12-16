@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
+    
   },
   bullet: {
     display: 'inline-block',
@@ -29,7 +30,7 @@ export default function OutlinedCard(props) {
 
   return (
     <Card className={classes.root} variant="outlined" onClick={props.onClick}>
-      <CardContent>
+      <CardContent style={{backgroundColor:props.color}}>
         <Typography variant="h5" component="h2">
           {props.reponse}
         </Typography>
