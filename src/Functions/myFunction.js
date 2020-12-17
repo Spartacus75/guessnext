@@ -76,3 +76,97 @@ export function shuffle(array) {
 
   return array;
 }
+
+
+export function listSourate(array){
+  //console.log(array)
+  var liste = array.map(item => item.name)
+  //console.log(liste)
+  var uniq = [...new Set(liste)]
+  //console.log(uniq)
+
+  return uniq
+}
+
+
+export function listSourateCompleted(array){
+
+    //var liste = array.filter(item => item.isCompleted == true)
+    //var liste2 = liste.filter((v,i,a)=>a.findIndex(t=>(JSON.stringify(t) === JSON.stringify(v)))===i)
+    //console.log(liste)
+
+  return 465464
+}
+
+export function calculSansFaute(array){
+
+  var nombreSansfaute = array.filter(item => item.percentageSuccess ==100).length
+  var nombreTentative = array.length
+  var resultat = 100*((nombreSansfaute/nombreTentative).toFixed(2))
+  //console.log(resultat)
+
+  return resultat
+}
+
+export function sourateSucceed(array){
+  console.log(array)
+  var liste = array.map((item, index) => {return {
+              key: index,
+              name: item.name,
+              isCompleted: item.isCompleted
+            }})
+  var listeFiltree = liste.filter(item => item.isCompleted === true)
+  console.log(liste)
+  console.log(listeFiltree)
+
+
+  var a = listeFiltree.reduce((accumulator, current) => {
+    if (checkIfAlreadyExist(current)) {
+      return accumulator;
+    } else {
+      return [...accumulator, current];
+    }
+
+    function checkIfAlreadyExist(currentVal) {
+      return accumulator.some((item) => {
+        return (item.name === currentVal.name );
+      });
+    }
+  }, []);
+
+  var resultat = a.length
+
+    return resultat
+}
+
+
+export function sourateFailed(array){
+  console.log(array)
+  var liste = array.map((item, index) => {return {
+              key: index,
+              name: item.name,
+              isCompleted: item.isCompleted
+            }})
+  var listeFiltree = liste.filter(item => item.isCompleted === false)
+  console.log(liste)
+  console.log(listeFiltree)
+
+
+  var a = listeFiltree.reduce((accumulator, current) => {
+    if (checkIfAlreadyExist(current)) {
+      return accumulator;
+    } else {
+      return [...accumulator, current];
+    }
+
+    function checkIfAlreadyExist(currentVal) {
+      return accumulator.some((item) => {
+        return (item.name === currentVal.name );
+      });
+    }
+  }, []);
+
+  var resultat = a.length
+
+    return resultat
+}
