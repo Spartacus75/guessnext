@@ -221,8 +221,7 @@ docRefReqII
 
                 <div style={{display:'flex',/*flexDirection:'column', justifyContent: 'space-around'*/}}>
 
-                <div style={{fontSize: 24}}>Score: {score}/{counter}<br/>{ counter !==0 ? Math.round(100*(score/counter)) : ''}%
-                </div>
+
 
                         <div>
                           <Picker
@@ -247,6 +246,10 @@ docRefReqII
 
 
 
+
+                </div>
+
+                <div style={{fontSize: 24}}>Score: {score}/{counter} - { counter !==0 ? Math.round(100*(score/counter)) : '0'}%
                 </div>
 
           {(propal.length !=0) &&

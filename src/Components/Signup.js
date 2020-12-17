@@ -26,8 +26,9 @@ async function handleSubmit(e){
           setLoading(true)
           await signup(emailRef.current.value, passwordRef.current.value)
           //au SignUp on crée l'utilisateur dans la base de donnéelse
+          console.log('Alpha')
           await firebase.firestore().collection('Users').doc(emailRef.current.value).set(
-             
+
              {
                       //userID: currentUser.uid,
                       email: emailRef.current.value,
@@ -41,8 +42,8 @@ async function handleSubmit(e){
 
           , {merge: true})
           //fin écriture da
-          console.log('coucou')
-          console.log('UID: ', currentUser.uid)
+          console.log('Beta')
+          //console.log('UID: ', currentUser.uid)
           history.push('/game')
         } catch {
           setError('Failed to create an account')
