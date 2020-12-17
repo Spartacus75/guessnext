@@ -23,7 +23,7 @@ return (
 
   <div style={{display:'flex', justifyContent:'space-around'}}>
   <Button color="primary" text="Dashboard" onClick={()=>onClickDashboard()}/>
-  <Button color="primary" text="Ranking" onClick={()=>onClickRanking()}/>
+{/*  <Button color="primary" text="Ranking" onClick={()=>onClickRanking()}/>*/}
   </div>
 
 

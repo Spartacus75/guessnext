@@ -109,15 +109,15 @@ export function calculSansFaute(array){
 }
 
 export function sourateSucceed(array){
-  console.log(array)
+  //console.log(array)
   var liste = array.map((item, index) => {return {
               key: index,
               name: item.name,
               isCompleted: item.isCompleted
             }})
   var listeFiltree = liste.filter(item => item.isCompleted === true)
-  console.log(liste)
-  console.log(listeFiltree)
+  //console.log(liste)
+  //console.log(listeFiltree)
 
 
   var a = listeFiltree.reduce((accumulator, current) => {
@@ -141,15 +141,15 @@ export function sourateSucceed(array){
 
 
 export function sourateFailed(array){
-  console.log(array)
+  //console.log(array)
   var liste = array.map((item, index) => {return {
               key: index,
               name: item.name,
               isCompleted: item.isCompleted
             }})
   var listeFiltree = liste.filter(item => item.isCompleted === false)
-  console.log(liste)
-  console.log(listeFiltree)
+  //console.log(liste)
+  //console.log(listeFiltree)
 
 
   var a = listeFiltree.reduce((accumulator, current) => {
@@ -169,4 +169,26 @@ export function sourateFailed(array){
   var resultat = a.length
 
     return resultat
+}
+
+export function percentageSucceed(array){
+//  console.log(array)
+
+var scoreArray = array.map(item => item.lastScore)
+var sommeScore = scoreArray.reduce((a,b) =>a+b,0)
+//console.log(scoreArray)
+//console.log(sommeScore)
+var erreurArray = array.map(item => item.erreur)
+var sommeErreur = erreurArray.reduce((a,b) => a+b,0)
+//console.log(erreurArray)
+//console.log(sommeErreur)
+var rateSucceed = Math.round(100*(sommeScore/(sommeScore+sommeErreur)))
+var container = []
+container.sommeScore=sommeScore
+container.sommeErreur=sommeErreur
+container.rateSucceed=rateSucceed
+console.log(container)
+console.log(container.sommeScore)
+
+  return container
 }

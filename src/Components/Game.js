@@ -57,7 +57,7 @@ export default function Game(){
           isCompleted: mistake<3 ? true : false,
           lastScore: score,
           erreur: mistake,
-          percentageSuccess: 100*percentSuccess.toFixed(2)
+          percentageSuccess: Math.round(100*percentSuccess)
         }
       )
     })
@@ -219,7 +219,10 @@ docRefReqII
 
           <div style={{display: 'flex', justifyContent: 'center', marginTop: 20, flexDirection:'column'}}>
 
-                <div style={{display:'flex', justifyContent: 'space-around'}}>
+                <div style={{display:'flex',/*flexDirection:'column', justifyContent: 'space-around'*/}}>
+
+                <div style={{fontSize: 24}}>Score: {score}/{counter}<br/>{ counter !==0 ? Math.round(100*(score/counter)) : ''}%
+                </div>
 
                         <div>
                           <Picker
@@ -242,7 +245,7 @@ docRefReqII
                           />
                           </div>
 
-                          <div style={{fontSize: 24}}>Score: {score}/{counter}<br/>{ counter !==0 ? 100*(score/counter).toFixed(2) : ''}%</div>
+
 
                 </div>
 
@@ -287,7 +290,7 @@ docRefReqII
                 texte='Fermer'
                 onClick={()=>onClick3()}
                 open={showScore}
-                blabla={'Votre taux de réussite est de ' + 100*(score/counter).toFixed(2) + ' %'}
+                blabla={'Votre taux de réussite est de ' + Math.round(100*(score/counter)) + ' %'}
           />
           <Alert
                 texte='Fermer'

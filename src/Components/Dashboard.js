@@ -8,7 +8,8 @@ import {listSourate,
   listSourateCompleted,
   calculSansFaute,
   sourateSucceed,
-  sourateFailed
+  sourateFailed,
+  percentageSucceed
 } from '../Functions/myFunction'
 
 
@@ -70,12 +71,14 @@ if (Array.isArray(dataServ.sourates)) {
   var sourateCommence = listSourate(dataServ.sourates).length
   var sourateOK = sourateSucceed(dataServ.sourates)
   var sourateNOK = sourateFailed(dataServ.sourates)
+  var percentageOK = percentageSucceed(dataServ.sourates)
 } else {
   var perfectRate = 0
   var numberParties = 0
   var sourateCommence = 0
   var sourateOK= 0
   var sourateNOK = 0
+  var percentageOK = 0
 }
 
 
@@ -91,7 +94,7 @@ if (Array.isArray(dataServ.sourates)) {
         <p><strong>Nombre de sourates non réussies:</strong>{sourateNOK}</p>
         <p><strong>Nombre de sourates non commencées:</strong> {114-sourateOK-sourateNOK} </p>
         <p><strong>Nombre de parties:</strong> {numberParties}  </p>
-        <p><strong>Pourcentage de bonnes réponses:</strong></p>
+        <p><strong>Pourcentage de bonnes réponses:</strong> {percentageOK.rateSucceed}% - ({percentageOK.sommeScore}/{percentageOK.sommeScore+percentageOK.sommeErreur})</p>
         <p><strong>Pourcentage de "sans faute": </strong>{perfectRate + ' %'}</p>
 
 
